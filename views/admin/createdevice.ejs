@@ -1,0 +1,143 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href="/css/createdevice.css">
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="createdevice_container_wrap">
+		<div class="createdevice_container">
+			<form method="post"  action="/admin/<% if(editing){ %>editDevice/<%= deviceId %><% } else { %>CreateDevice<%} %> ">
+				<div class="form-control control_namedt">
+					<label for="nameDevice">Tên trạm:</label>
+					<input placeholder="Tên trạm..." type="text" name="nameDevice" id="nameDevice" value="<%= data === '' ? oldInput.nameDevice : data.nameDevice %>">
+				</div>
+				<div class="listNameData">
+					<p class="listNameData_param">
+						Tên dữ liệu:
+					</p>
+					<% if(!editing) { %>
+						<div class="list_add_remove_btn_name">
+							<div class="add_namedt">
+								<i class="fa-solid fa-plus"></i>
+							</div>
+							<div class="remove_namedt">
+								<i class="fa-solid fa-minus"></i>
+							</div>
+						</div>
+					<% } %>
+					<% for(let i=0 ; i < filterdata.length ; i++) { %>
+						<div class="form-control ">
+							<div class="listdata_box_station">
+								<div class="form-control-wrap">
+									<input placeholder="Tên dữ liệu <%= i+1 %>" type="text" name="data<%= i+1 %>" id="data<%= i+1 %>" value="<%= data === '' ? oldInput.data1 : filterdata[i].namedata %>">
+								</div>
+								<div class="form-control-wrap">
+									<input placeholder="Đợn vị <%= i+1 %>" type="text" name="unit<%= i+1 %>" id="unit<%= i+1 %>" value="<%= data === '' ? oldInput.unit1 : filterdata[i].unit %>">
+								</div>
+							</div>
+						</div>
+					<% } %>
+				</div>
+
+				<div class="form-control">
+					<p>Vị trí:</p>
+					<div class="form-control_wrap_box">
+						<div class="form-control-wrap_location">
+							<input placeholder="lat" type="text" name="location_lat" id="location_lat" value="<%= data === '' ? oldInput.location_lat : data.location.lat %>">
+						</div>
+						<div class="form-control-wrap_location">
+							<input placeholder="lng" type="text" name="location_lng" id="location_lng" value="<%= data === '' ? oldInput.location_lng : data.location.lng %>">
+						</div>
+					</div>
+				</div>
+				<div class="form-control control_des">
+					<label for="description">Mô tả:</label>
+					<textarea placeholder="Nhập mô tả của bạn..." name="description" id="description"><%= data === '' ? oldInput.description : data.description %></textarea>
+				</div>
+				<p class="noti_err_text_createdevice"><%= messerr.msg %></p>
+				<button type="submit" class="btn_createdv" ><% if (editing) { %>Cập nhật<% } else {%>Thêm trạm<% } %> </button>
+			</form>
+		</div>
+	</div>
+	
+	
+    
+
+
+<%- include('../includes/footer.ejs') %>
+
+
+<script>
+	let data = <%- JSON.stringify(editing) %>
+	console.log(Boolean(data))
+	
+	const remove_namedt = document.querySelector('.remove_namedt')
+	const listNameData = document.querySelector('.listNameData')
+	const btnaddname = document.querySelector('.add_namedt')
+	const list_add_remove_btn_name = document.querySelector('.list_add_remove_btn_name')
+	
+	function insertAfter(newNode, existingNode) {
+            existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+        }
+	 
+	function createElement(num) {
+		const newDivall = document.createElement("div");
+		const newDiv = document.createElement("div");
+		const newDivWrap1 = document.createElement("div")
+		const inputdt1 = document.createElement("input")
+		const newDivWrap2 = document.createElement("div")
+		const inputdt2 = document.createElement("input")
+		
+		
+		inputdt1.type = "text";
+		inputdt1.name = `data${num}`;
+		inputdt1.id = `data${num}`;
+		inputdt2.type = "text";
+		inputdt2.name = `unit${num}`;
+		inputdt2.id = `unit${num}`;
+		inputdt1.placeholder = `Tên dữ liệu ${num}`
+		inputdt2.placeholder = `Đơn vị ${num}`
+		
+		
+		newDivWrap1.className = 'form-control-wrap'
+		newDivWrap2.className = 'form-control-wrap'
+		newDivall.className = 'listdata_box_station'
+		
+		newDiv.className = 'listdata_box_station'
+		newDiv.appendChild(newDivWrap1);
+		newDiv.appendChild(newDivWrap2);
+		newDivWrap1.appendChild(inputdt1)
+		newDivWrap2.appendChild(inputdt2)
+		
+				// console.log(num)
+
+		insertAfter(newDiv, list_add_remove_btn_name.nextSibling);
+	}
+	
+	var num = 1;
+	
+	btnaddname.onclick = () => {
+		num += 1;
+		if(num <= 10) {
+			createElement(num)
+		}
+		
+		console.log(num)
+	}
+	
+	remove_namedt.onclick = () => {
+		let listboxname = document.querySelectorAll('.listdata_box_station')
+		if(listboxname.length > 1 ) {
+			listboxname[0].remove()
+			if(num>10) {
+				num = 10;
+				num -= 1;
+			} else {
+				num -= 1;
+			}
+		}
+	}
+	
+</script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

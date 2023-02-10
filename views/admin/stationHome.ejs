@@ -1,0 +1,313 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href="/css/station.css">
+<link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="container_station">
+		<div class="station_search_div">
+			<form class="station_search_form">
+				<input type="text" class="search_dv_station" name="nameDv" placeholder="Tìm kiếm trạm..." >
+				<button>
+					<i class="fa-solid fa-magnifying-glass"></i>
+				</button>
+			</form>
+		</div>
+		<div class="container_station_table">
+			<ul class="station_input-check">
+					<li class="station_item-input container_station-title">
+						<input class="all_input_check" type="checkbox">
+					</li>
+				<% if (data.length > 0) { %>
+						<% for (let dt of data) { %>
+					<li class="station_item-input">
+						<input class="input_check" value="<%= dt.deviceId %>" type="checkbox">
+					</li>
+				<% } %>
+					<% } else { %>
+            			<p class="noDevice">Chưa có trạm nào!<p>
+        			<% } %>
+				
+			</ul>
+			
+			<div class="station_wrap">
+				<ul class="container_station_list">
+					<li class="station_item item_name container_station-title">TÊN</li>
+					<% if (data.length > 0) { %>
+						<% for (let dt of data) { %>
+					<li class="station_item"><%= dt.nameDevice %></li>
+					<% } %>
+					<% } else { %>
+            		<p class="noDevice">Chưa có trạm nào!<p>
+        			<% } %>
+				</ul>
+				
+				<ul class="container_station_list container_station_list_timecreate  ">
+					<li class="station_date container_station-title">NGÀY TẠO</li>
+					<% if (data.length > 0) { %>
+						<% for (let dt of data) { %>
+					<li class="station_date"><%= dt.createAt %></li>
+					<% } %>
+					<% } else { %>
+            		<p class="noDevice">Chưa có trạm nào!<p>
+        			<% } %>
+				</ul>
+				<ul class="container_station_list container_station_list_status">
+					<li class="container_status container_station-title">TRẠNG THÁI</li>
+					<% if (data.length > 0) { %>
+						<% for (let i=0; i< data.length ; i++) { %>
+						<li class="container_status_<%= data[i].deviceId %><">On</li>
+					<% } %>
+					<% } else { %>
+            			<p class="noDevice">Chưa có trạm nào!<p>
+        			<% } %>
+				</ul>
+				<ul class="container_station_list">
+					<li class="container_action container_station-title">HÀNH ĐỘNG</li>
+					<% if (data.length > 0) { %>
+						<% for (let dt of data) { %>
+					<li class="container_action">
+						<a href='/admin/seechart/<%= dt.deviceId %>'>
+							<i class="fa-solid fa-eye"></i>
+						</a>
+						<a href='/admin/editDevice/<%= dt.deviceId %>?edit=true'>
+							<i class="fa-solid fa-pen"></i>
+						</a>
+						<a href='/admin/infoDevice/<%= dt.deviceId %>'>
+							<i class="fa-sharp fa-solid fa-file-invoice"></i>
+						</a>
+						<div class="station_delete_div_wrap">
+							<div class="station_delete_div">
+								<i class="fa-solid fa-trash"></i>
+							</div>
+							<div class="station_check_delete_wrap">
+								<form method="post" action="/admin/deleteDevice/<%= dt.deviceId %>">
+									<p class="station_param_dele">Bạn có muốn xóa vĩnh viễn dữ liệu của trạm này?</p>
+									<div class="station_listBtn_dele">
+										<button type="submit">Xóa</button>
+										<div class="station_btn_back">Trở lại</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</li>
+					<% } %>
+					<% } else { %>
+            			<p class="noDevice">Chưa có trạm nào!<p>
+        			<% } %>
+				</ul>
+			</div>
+			
+		</div>
+		<div class="container_station_header">
+			<form method="post" action="/admin/station/download" class="form_download_pdf">
+				<div class="container_station_header_btn-baocao">
+					<i class="fa-sharp fa-solid fa-download"></i>
+					Báo cáo tổng quan
+				</div>
+				<input type="hidden" name="dt" value="" class="hidden_input_datadl" >
+			</form>
+			
+			<a href="/admin/createDevice" class="container_station_header_btn-addstation">
+				<i class="fa-sharp fa-solid fa-user-plus"></i>
+				Thêm trạm
+			</a>
+			
+		</div>
+	</div>
+	<%- include('../includes/map.ejs') %>
+
+	
+
+
+<%- include('../includes/footer.ejs') %>
+
+
+<script src="https://js.arcgis.com/4.19/"></script>
+
+<!-- download data -->
+<script>
+	const hidden_input_datadl = document.querySelector('.hidden_input_datadl')
+	const all_input_check = document.querySelector('.all_input_check')
+	const btn_bc = document.querySelector('.container_station_header_btn-baocao')
+	const form_download_pdf = document.querySelector('.form_download_pdf')
+	const listCheck = document.querySelectorAll('.input_check')
+	
+	let lengthCheck=0;
+	
+	all_input_check.onchange = () => {
+		if(all_input_check.checked) {
+			btn_bc.classList.add('active')
+			lengthCheck = listCheck.length
+			console.log(lengthCheck)
+			for(let item of listCheck) {
+				item.checked = true;
+			}
+		} else {
+			btn_bc.classList.remove('active')
+			lengthCheck = 0;
+			for(let item of listCheck) {
+				item.checked = false;
+			}
+		}
+	}
+	
+	for(let item of listCheck) {
+		item.onchange = () => {
+			all_input_check.checked = false;
+			if(item.checked) {
+				lengthCheck += 1;
+			} else if(!item.checked) {
+				lengthCheck -= 1;
+			}
+			
+			console.log(lengthCheck)
+			if(lengthCheck > 0) {
+				btn_bc.classList.add('active')	
+			} else {
+				btn_bc.classList.remove('active')
+			}
+		}
+		
+		
+	}
+	
+	
+	
+	
+	btn_bc.onclick = () => {
+		let data = '';
+		for(let item of listCheck) {
+			if(item.checked) {
+				data += `${item.value}_`
+			}
+		}
+		// console.log(data.split('_'))
+		hidden_input_datadl.value = data
+		console.log(hidden_input_datadl.value)
+		if(data.length > 2) {
+			all_input_check.checked = false;
+			for(let item of listCheck) {
+				item.checked = false
+			}
+			form_download_pdf.submit()
+		}
+	}
+	
+	
+</script>
+
+<!-- map -->
+<script>
+	const iconDele = document.querySelectorAll('.station_delete_div > i')
+	const wrapDivDele = document.querySelectorAll('.station_check_delete_wrap')
+	const btnBack = document.querySelectorAll('.station_btn_back')
+	
+	let data = <%- JSON.stringify(data) %>
+	const filterData = data.map(item => {
+		return item.location
+	})
+	// console.log(filterData);
+	
+	require([
+          "esri/config",
+          "esri/Map",
+          "esri/views/MapView",
+          "esri/widgets/Locate",
+
+          "esri/widgets/Track",
+	      "esri/Graphic",
+    	  "esri/layers/GraphicsLayer"
+
+        ], function(
+            esriConfig,
+            Map,
+            MapView,
+            Locate,
+
+            Track,
+            Graphic,
+			 GraphicsLayer
+
+        ) {
+
+        esriConfig.apiKey = "AAPK1afc5c7b61074c27a00c07f1e0309606aZu0N8gXjosgsivD91-BKqRYFfV8B3Iy0-2vmLipTMaFJW8DrOQNW3mhCIbzncn5";
+
+        const map = new Map({
+		basemap: "streets" //Basemap layer service
+	  	});
+
+         const view = new MapView({
+		map: map,
+		center: [105.804817,21.028511], //Longitude, latitude
+		zoom: 8,
+		container: "map"
+	 });
+
+        const track = new Track({
+          view: view,
+          graphic: new Graphic({
+            symbol: {
+              type: "simple-marker",
+              size: "12px",
+              color: "green",
+              outline: {
+                color: "#efefef",
+                width: "1.5px"
+              }
+            }
+          }),
+          useHeadingEnabled: false
+        });
+        view.ui.add(track, "top-left");
+	
+		const graphicsLayer = new GraphicsLayer();
+ map.add(graphicsLayer);
+
+
+for(let i=0 ; i < filterData.length ; i++) {
+	
+ const point = { //Create a point
+    type: "point",
+    longitude: Number(filterData[i].lng),
+    latitude: Number(filterData[i].lat)
+ };
+ const simpleMarkerSymbol = {
+    type: "simple-marker",
+    color: [226, 119, 40],  // Orange
+    outline: {
+        color: [255, 255, 255], // White
+        width: 1
+    }
+ };
+
+ const pointGraphic = new Graphic({
+    geometry: point,
+    symbol: simpleMarkerSymbol
+ });
+ graphicsLayer.add(pointGraphic);
+}
+	
+});
+
+
+// hanldeDelete Device
+// console.log(iconDele)
+for (let i=0;i<iconDele.length;i++) {
+	iconDele[i].onclick = () => {
+		wrapDivDele[i].style.display = "flex";
+	}
+	
+}
+for(let i=0;i<btnBack.length;i++) {
+	btnBack[i].onclick = () => {
+		wrapDivDele[i].style.display = "none";
+	}	
+}
+
+	
+</script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

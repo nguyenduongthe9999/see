@@ -1,0 +1,411 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
+<link rel="stylesheet" href="/css/infodevice.css">
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	
+	<div class="container">
+		<div class="container_info">
+			<div class="container_info-one">
+				<h2 class="container_info-title">Thông tin Trạm đo</h2>
+				<div class="container_info-one-wrap">
+					<p class="container_info-one-item">
+						<span class="span_name">Tên thiết bị : </span><%= filterData.nameDevice %>
+					</p>
+					<p class="container_info-one-item">
+						<span class="span_name">vị trí : </span>
+						<span class="span_location"><span class="span_lo">lat : </span><%= filterData.location.lat %> </span>
+						<span class="span_location"><span class="span_lo">lng : </span><%= filterData.location.lng %></span>
+					</p>
+					<p class="container_info-one-item">
+						<span class="span_name">Mô tả : </span>
+						<span class="des_param"><%= filterData.description %></span>
+						
+					</p>
+					<p class="container_info-one-item">
+						<span class="span_name">id : </span>
+						<span class="value_id"><%= filterData._id %></span> 
+						<button class='btn_copy btn_copy_id'>copy id</button>
+					</p>
+					
+					
+					
+					<div class="container_info-one-item box_formJs">
+							<span class="span_name">Form json: </span>
+							<span class="value_formjson">
+								<pre class='text_json'></pre>
+							</span>
+							<button class='btn_copy btn_copy_json'>copy form</button>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="container_info-three">
+				<h2 class="container_info-title container_info-title3">Hướng dẫn</h2>
+				<div class="container_info-three-wrap">
+					<p class="container_info-three-item">
+						<span class="span_param_three">Bước 1 : </span>
+						Kiểm tra thông tin của trạm đo
+					</p>
+					<p class="container_info-three-item">
+						<span class="span_param_three">Bước 2 : </span>
+						Lấy Id
+					</p>
+					<p class="container_info-three-item">
+						<span class="span_param_three">Bước 3 : </span>
+						Lấy key-api <a class='container_info-three-item-redict' href="/admin/setting/<%= deviceId %>">Tại đây!</a>.
+					</p>
+					<p class="container_info-three-item">
+						<span class="span_param_three">Bước 4 :</span>
+						Sử dụng mã bên phải,keyapi,id vừa sao chép để truyền dữ liệu
+					</p>
+					<p class="container_info-three-item">
+						<span class="span_param_three">Bước 5 : </span>
+						Sau khi truyền thành công bạn có thể <a class='container_info-three-item-redict' href="/admin/station">Click vào đây!</a> để xem trạm.
+					</p>
+					
+				</div>
+			</div>
+
+			<div class="container_info-two">
+				<h2 class="container_info-title">Thông tin dữ liệu</h2>
+				<div class="container_info-two-wrap">
+					<% for(let i = 0 ; i < filterNameArr.length ; i++) { %>
+						<div class="container_info-two-item">
+							<p>
+								<span class="name_data">Tên dữ liệu <%= i+1 %>: </span>
+								<span class="value_data"><%= filterData[filterNameArr[i]].namedata %></span>
+							</p>
+							<p>
+								<span class="name_data">Đơn vị <%= i+1 %>: </span>
+								<span class="value_data"><%= filterData[filterNameArr[i]].unit %></span>
+							</p>
+						</div>
+					<% } %>
+					
+				</div>
+				
+			</div>
+		</div>
+		<div class="container_code">
+			<div class="code_listBtn">
+				<button class="btn_code btn8266 active">ESP8266</button>
+				<button class="btn_code btnE32">ESP32</button>
+				<button class="btn_code btnS32">STM32</button>
+				<button class="btn_code btnAr">ARDUINO</button>
+			</div>
+			<div class="box_code">
+				<button class='btn_copy btn_code_copy'>copy</button>
+				<pre class="contai_code"></pre>
+			</div>
+			
+		</div>
+	</div>
+	
+	
+	<%- include('../includes/map.ejs') %>
+	
+	
+
+<%- include('../includes/footer.ejs') %>
+
+<script src="https://js.arcgis.com/4.19/"></script>
+<script>
+	const btn_copy_json = document.querySelector('.btn_copy_json');
+	const text_json = document.querySelector('.text_json');
+	const id = document.querySelector('.value_id');
+	const btn_copy_id = document.querySelector('.btn_copy_id');
+	const btn_code_copy = document.querySelector('.btn_code_copy');
+	const contai_code = document.querySelector('.contai_code');
+	const btn8266 = document.querySelector('.btn8266');
+	const btnE32 = document.querySelector('.btnE32');
+	const btnS32 = document.querySelector('.btnS32');
+	const btnAr = document.querySelector('.btnAr');
+	
+	const texId = <%- JSON.stringify(filterData._id) %>
+	let activeBtn = btn8266.innerText;
+	const filterNameArr = <%- JSON.stringify(filterNameArr) %>
+// 	get fomr json
+	let initTextJson = '{\n'
+	let frm_json = filterNameArr.reduce((content,currentValue,index) => {
+		return content + `  data${index+1}:'... or -1',\n`
+	},initTextJson)
+	frm_json = frm_json + `  deviceId:'${texId}'\n}`
+	console.log(frm_json)
+	text_json.innerText = frm_json;
+	
+// 	get code esp8266
+	let initTextTransform = 'String("{") + ';
+	let textTransform = filterNameArr.reduce((content,currentValue,index)=> {
+		return content + `"\\"data${index+1}\\"" + ":" + "\\"" + random(${(index+1)*10},${(index+2)*10}) + "\\"" + ","  + `
+	},initTextTransform)
+	
+	textTransform = textTransform + `"\\"deviceId\\"" + ":" + "\\"your_id\\"" + "}";`;
+	console.log(textTransform)
+	
+	let code8266 =
+`
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
+#include <Arduino_JSON.h>
+
+const char* ssid = "name_wifi";
+const char* password = "password";
+String stt = "off";
+String serverName = "http://seed-data.run.goorm.io/admin/deployDt";
+String keyapi = "http://seed-data.run.goorm.app/admin/api/deviceData/your_keyapi";
+unsigned long lastTime = 0;
+unsigned long timerDelay = 1000;
+unsigned long slepTime;
+String json_array;
+WiFiClient client;
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  Serial.println("Connecting");
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to WiFi network with IP Address: ");
+  Serial.println(WiFi.localIP());
+}
+
+String GET_Request(const char* keyapi) {
+  HTTPClient http;    
+  http.begin(client,keyapi);
+  int httpResponseCode = http.GET(); 
+  String payload = "{}"; 
+  if (httpResponseCode>0) {
+    Serial.print("HTTP Response code get: ");
+    Serial.println(httpResponseCode);
+    payload = http.getString();
+  }
+  else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+  http.end();
+  return payload;
+}
+
+void loop() {
+  if ((millis() - lastTime) > timerDelay) {
+    //Check WiFi connection status
+    if(WiFi.status()== WL_CONNECTED){
+      HTTPClient http;
+      //get data
+      json_array = GET_Request(keyapi.c_str());
+      JSONVar my_obj = JSON.parse(json_array);
+      if (JSON.typeof(my_obj) == "undefined") {
+        Serial.println("Parsing input failed!");
+        return;
+      }
+      Serial.println(my_obj);
+      if (my_obj.hasOwnProperty("slepTime")) {
+        Serial.print("my_obj[\\"slepTime\\"] = ");
+        Serial.println((const char*) my_obj["slepTime"]);
+        slepTime =  atoi((const char*) my_obj["slepTime"]);       
+      }
+      if (my_obj.hasOwnProperty("status")) {
+        Serial.print("my_obj[\\"status\\"] = ");
+        Serial.println((const char*) my_obj["status"]);
+        stt = String((const char*) my_obj["status"]);
+      }      
+      //post data
+      http.begin(client, serverName);
+      http.addHeader("Content-Type", "application/json");
+      String postData = ${textTransform}
+      if(stt == "on") {
+        int httpResponseCode = http.POST(postData);
+        Serial.println("Trang thai: Dang bat");
+        Serial.print("HTTP Response code post: ");
+        Serial.println(httpResponseCode);
+      } else {
+        Serial.println("Trang thai: Dang tat");
+      } 
+      Serial.println("---------------");
+      Serial.println();
+        
+      // Free resources
+      http.end();
+    }
+    else {
+      Serial.println("WiFi Disconnected");
+    }
+    lastTime = millis();
+    // check slep time
+    timerDelay = slepTime;
+  }
+}
+`	
+contai_code.innerText = code8266;
+	
+// 	coppy id
+	btn_copy_id.onclick = () => {
+		navigator.clipboard.writeText(id.textContent);
+		btn_copy_id.textContent = 'Copied Id!';
+		btn_code_copy.textContent = 'Copy';
+		btn_copy_json.textContent = 'Copy form';
+	}
+
+// 	copy code 
+	btn_code_copy.onclick = () => {
+		navigator.clipboard.writeText(contai_code.innerText);
+		btn_code_copy.textContent = 'Copied!';
+		btn_copy_id.textContent = 'Copy Id';
+		btn_copy_json.textContent = 'Copy form';
+	}
+	
+// 	copy form id
+	btn_copy_json.onclick = () => {
+		navigator.clipboard.writeText(frm_json);
+		btn_copy_json.textContent = 'Copied!';
+		btn_code_copy.textContent = 'Copy';
+		btn_copy_id.textContent = 'Copy Id';
+	}
+
+// get code esp8266
+	btn8266.onclick = () => {
+		if(activeBtn !== btn8266.innerText) {
+			btn8266.classList.add('active');
+			btnE32.classList.remove('active');
+			btnS32.classList.remove('active');
+			btnAr.classList.remove('active');
+			contai_code.innerText = code8266;
+			
+		} 
+		activeBtn = btn8266.innerText;
+	}
+	
+	btnAr.onclick = () => {
+		if(activeBtn !== btnAr.innerText) {
+			btnE32.classList.remove('active');
+			btnS32.classList.remove('active');
+			btn8266.classList.remove('active');
+			btnAr.classList.add('active');
+			contai_code.innerText = 'code arduino'
+		}
+		activeBtn = btnAr.innerText;
+	}
+	
+	btnS32.onclick = () => {
+		if(activeBtn !== btnS32.innerText) {
+			btnE32.classList.remove('active');
+			btn8266.classList.remove('active');
+			btnAr.classList.remove('active');
+			btnS32.classList.add('active');
+			contai_code.innerText = 'code stm32'
+		}
+		activeBtn = btnS32.innerText;
+	}
+	
+	btnE32.onclick = () => {
+		if(activeBtn !== btnE32.innerText) {
+			btn8266.classList.remove('active');
+			btnS32.classList.remove('active');
+			btnAr.classList.remove('active');
+			btnE32.classList.add('active');
+			contai_code.innerText = 'esp32 code'
+		}
+		activeBtn = btnE32.innerText;
+	}
+	
+</script>
+
+
+<!-- script map -->
+<script>
+	const loca = <%- JSON.stringify(filterData.location) %>
+	require([
+          "esri/config",
+          "esri/Map",
+          "esri/views/MapView",
+          "esri/widgets/Locate",
+
+          "esri/widgets/Track",
+	      "esri/Graphic",
+    	  "esri/layers/GraphicsLayer"
+
+        ], function(
+            esriConfig,
+            Map,
+            MapView,
+            Locate,
+
+            Track,
+            Graphic,
+			 GraphicsLayer
+
+        ) {
+
+        esriConfig.apiKey = "AAPK1afc5c7b61074c27a00c07f1e0309606aZu0N8gXjosgsivD91-BKqRYFfV8B3Iy0-2vmLipTMaFJW8DrOQNW3mhCIbzncn5";
+
+        const map = new Map({
+		basemap: "arcgis-topographic" //Basemap layer service
+	  	});
+
+         const view = new MapView({
+		map: map,
+		center: [Number(loca.lng),Number(loca.lat)], //Longitude, latitude
+		zoom: 8,
+		container: "map"
+	 });
+
+        const track = new Track({
+          view: view,
+          graphic: new Graphic({
+            symbol: {
+              type: "simple-marker",
+              size: "12px",
+              color: "green",
+              outline: {
+                color: "#efefef",
+                width: "1.5px"
+              }
+            }
+          }),
+          useHeadingEnabled: false
+        });
+        view.ui.add(track, "top-left");
+	
+		const graphicsLayer = new GraphicsLayer();
+ map.add(graphicsLayer);
+
+ const point = { //Create a point
+    type: "point",
+    longitude: Number(loca.lng),
+    latitude: Number(loca.lat)
+ };
+ const simpleMarkerSymbol = {
+    type: "simple-marker",
+    color: [226, 119, 40],  // Orange
+    outline: {
+        color: [255, 255, 255], // White
+        width: 1
+    }
+ };
+
+ const pointGraphic = new Graphic({
+    geometry: point,
+    symbol: simpleMarkerSymbol
+ });
+ graphicsLayer.add(pointGraphic);
+	
+
+      });
+
+
+
+
+	
+</script>
+	
+	
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

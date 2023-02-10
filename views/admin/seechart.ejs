@@ -1,0 +1,262 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href="/css/seeChart.css">
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="chart_setting_wrap">
+		<div class="chart_setting">
+			<form  method="post" action="/admin/postfilterchart/<%= deviceId %>">
+				<div class="form_wrap">
+					<div class="form_item">
+					  <label for="filterChart"><i class="fa-solid fa-database"></i> Loại dữ liệu</label>
+					  <select name="filterChart" id="filterChart">
+						  <% if (listnamefilter.length > 0) { %>
+							<% for (let i in listnamefilter) { %>
+						  <option value="<%= i %>"><%= infodt[listnamefilter[i]].namedata %></option>
+						  <% } %>
+							<% } else { %>
+							<h1>No Products Found!</h1>
+							<% } %>
+					  </select>
+					</div>
+					<div class="form_item">
+					  <label for="type_chart"><i class="fa-sharp fa-solid fa-chart-simple"></i> Loại biểu đồ</label>
+					  <select name="typeChart" id="type_chart">
+						  <option value="line">Biểu đồ đường</option>
+						  <option value="bar">Biểu đồ cột</option>
+						  <option value="polarArea">Biểu đồ vùng cực</option>
+						  <option value="radar">Biểu đồ radar</option>
+						  <option value="doughnut">Biểu đồ tròn</option>
+						  <option value="scatter">Biểu đồ phân tán</option>
+					  </select>
+					</div>
+					<div class="form_item">
+					  <label for="numberDataInChart">Số điểm</label>
+					  <select name="numberPoint" id="numberDataInChart">
+						  <option value="10">10</option>
+						  <option value="20">20</option>
+						  <option value="50">50</option>
+						  <option value="100">100</option>
+						  <option value="200">200</option>
+						  <option value="500">500</option>
+						  <option value="1000">1000</option>
+						  <option value="3000">3000</option>
+						  <option value="6000">6000</option>
+						  <option value="20000">20000</option>
+						  <option value="60000">60000</option>
+						  <option value="100000">100000</option>
+					  </select>
+					</div>
+				</div>
+				<div class="btn_div">
+					<input class="chart_setting-btn" type="submit" value="Truy Xuất">
+				</div>
+			</form>
+
+			<div class="option_chart">
+				<div class="option_chart_time">
+					<div class="option_chart_time-item">
+						<p class="time_item-title">Ngày bắt đầu</p>
+						<div class="time_item-value">
+							<i class="fa-solid fa-business-time"></i>
+							<p class="time_item-value-param timeStart">01/07/2022 01:11</p>
+						</div>
+					</div>
+					<div class="option_chart_time-item">
+						<p class="time_item-title">Ngày kết thúc</p>
+						<div class="time_item-value">
+							<i class="fa-solid fa-business-time"></i>
+							<p class="time_item-value-param timeEnd">01/07/2022 01:11</p>
+						</div>
+					</div>
+				</div>
+				<div class="div_link">
+					<a href="/admin/infoDevice/<%= deviceId %>" class="option_chart_map">Xem bản đồ</a>
+					<a href="/admin/seechart/download/<%= deviceId %>" class="option_chart_download">Tải dữ liệu</a>
+				</div>
+			</div>
+			<!-- <div class="disSeting"></div> -->
+		</div>
+	</div>
+ 	
+	<canvas id="myChart"></canvas>
+
+<%- include('../includes/footer.ejs') %>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+	let xx;
+	let yy;
+	const ctx = document.getElementById('myChart');
+	const timeStart = document.querySelector('.timeStart')
+	const timeEnd = document.querySelector('.timeEnd')
+	
+	timeEnd.textContent = 'fsdfds'
+	
+	const documentKey = <%- JSON.stringify(documentKey) %>;
+	// console.log(documentKey)
+	let currentData = <%- JSON.stringify(currentData) %>
+	let data = <%- JSON.stringify(data) %>
+	let title = <%- JSON.stringify(data.name) %>
+	let unit = <%- JSON.stringify(data.unit) %>
+	let typeChart = <%- JSON.stringify(currentTypeChart) %>
+	let numberPoint = <%- JSON.stringify(currentNumberPoint) %>
+		
+	console.log(data)
+	console.log(numberPoint)
+		
+const filtercharts = () => {
+	let dttime;
+	let dttValues;
+	if(Number(numberPoint) <= data.data.values.length) {
+		dttime = data.data.time.slice(data.data.time.length- Number(numberPoint),data.data.time.length).map(item => {
+			return item.split(' ')[1]
+		})
+		dttValues = data.data.values.slice(data.data.time.length- Number(numberPoint),data.data.time.length)
+		timeEnd.textContent = data.data.time[data.data.time.length-1];
+		timeStart.textContent = data.data.time[data.data.time.length- Number(numberPoint)]
+		
+	} else {
+		dttime = data.data.time.map(item => {
+			return item.split(' ')[1]
+		});
+		dttValues = data.data.values
+		timeEnd.textContent = data.data.time[data.data.time.length-1];
+		timeStart.textContent = data.data.time[0]
+		
+	}
+	
+	return {time:dttime,value:dttValues}
+}
+		
+	
+filtercharts()
+
+let chartDevice = new Chart(ctx, {
+	type: typeChart ,
+	data: {
+	  labels:filtercharts().time,
+	  datasets: [{
+		label: `# ${title}`,
+		data: filtercharts().value,
+		borderWidth: 1,
+	   pointRadius: 0,
+		fill: {
+		target: 'origin',
+		above: 'rgb(153, 153, 0,0.2)',   // Area will be red above the origin
+		below: 'rgb(0, 0, 255,0.2)'    // And blue below the origin
+	  },
+		borderColor: 'rgb(75, 192, 192)',
+		tension: 0.2
+	  }]
+	},
+	options: {
+	  scales: {
+		  x: {
+			max: Number(numberPoint),
+			grid: {
+				lineWidth:1,
+				// tickLength:200,
+				tickWidth:100,
+			}
+		  },
+		  y: {
+			grace: '10%',
+			ticks: {
+			  callback: value => `${value} ${unit}`,
+				stepSize: 5,
+			},
+
+			grid: {
+				tickWidth:100,
+			}
+		  }
+		},
+		layout: {
+			// padding: 20
+		},
+
+		animation: false,
+		plugins: {
+			title: {
+				display: true,
+				text: `Biểu đồ ${title}`,
+				font: {
+					size: 30
+				}
+			}
+		}
+	}
+  });
+	
+// 	display seting
+	// const disSeting = document.querySelector('.disSeting')
+	// const frm = document.querySelector('.chart_setting > form')
+	// const option_chart = document.querySelector('.option_chart')
+	// const chart_setting = document.querySelector('.chart_setting')
+	// let isDisSeting = true;
+	// disSeting.onclick = () => {
+	// 	if(isDisSeting) {
+	// 		frm.style.display = 'none';
+	// 		option_chart.style.display = 'none';
+	// 		chart_setting.style.minHeight = '1px';
+	// 		// chart_setting.style.boxShadow = 'none';
+			
+	// 	} else {
+	// 		frm.style.display = 'flex';
+	// 		option_chart.style.display = 'flex';
+	// 		chart_setting.style.minHeight = '100px';
+	// 	}
+		
+	// 	isDisSeting = !isDisSeting;
+	// }
+	
+	
+// 	socket io 
+	var socket = io();
+	socket.on('chat message',async (dt,aa) => {
+		if(dt.documentKey._id.toString() === documentKey.toString()) {
+			let arrnamedt = Object.keys(aa);
+			let indexnamedt = arrnamedt.findIndex(item => {
+				return item.split('.')[1] === currentData
+			})
+			console.log(aa)
+			if(aa.__v > 100000) {
+				console.log('lon hon 100')
+				data.data.values = aa[arrnamedt[indexnamedt]]
+				data.data.time = aa['value.time']
+				chartDevice.data.datasets[0].data=filtercharts().value;
+				chartDevice.data.labels = filtercharts().time;
+				await chartDevice.update()
+			} else {
+				console.log('nho hon bang 100')
+				data.data.values.push(aa[arrnamedt[indexnamedt]])
+				data.data.values.shift()
+				data.data.time.push(aa[arrnamedt[arrnamedt.length-1]])
+				data.data.time.shift()
+				chartDevice.data.labels = filtercharts().time;
+				chartDevice.data.datasets[0].data=filtercharts().value;
+				await chartDevice.update();
+			}
+			
+			// console.log(arrnamedt)
+			// console.log(indexnamedt)
+			
+			// console.log(arrnamedt)
+			
+			
+			// console.log(data)
+			
+		}
+		
+    	
+  	});
+	
+</script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

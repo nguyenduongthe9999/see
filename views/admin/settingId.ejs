@@ -1,0 +1,96 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href='/css/settingid.css'>
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="container_settingid">
+		<form method="post" action="/admin/setting/<%= data.deviceId %>">
+			<div class="setting_cf_list">
+				<div class="setting_cf_item_input">
+					<div class="setting_cf_item_input_wrap">
+						<label for="timeSend">Thời gian truyền: </label>
+						<div class="wrap_input_select">
+							<div class="wrap_input_select_wrap">
+								<input value="<%= data.currentTime.split(" ")[0] %>" placeholder="Nhập thời gian..." name="timeSend" id='timeSend' type="text" >
+								<select name="typeTime">
+								  <option value="second">Giây</option>
+								  <option value="minute">Phút</option>
+								  <option value="hour">Giờ</option>
+								  <option value="day">Ngày</option>
+							  </select>
+							</div>
+							<!-- <div class="setting_cf_item_input_wrap">
+								<p class="current_value_time">CurrentTime: <%= data.currentTime %></p>
+							</div> -->
+						</div>
+					</div>
+				</div>
+				<div class="setting_cf_item">
+					<div class="setting_cf_item_wrap">
+						<div class="get_keyapi">
+							<span class="get_keyapi_title">Lấy Key api</span> 
+							<span class="text_keyapi"></span>
+							<span class="des_copy">copy</span>
+						</div>
+						<div class="stop_dv">
+							<div class="btn_stop_dv"></div>
+							<input name ="status" class="value_btn_stop" value="<%= data.status %>" type="hidden">
+						</div>
+					</div>
+					<button class="btn_saveTimeSlep" type="submit">Lưu</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+<%- include('../includes/footer.ejs') %>
+
+<!-- <script src="/js/googleMap/map.js"></script> -->
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>
+<script>
+	const value_btn_stop = document.querySelector('.value_btn_stop')
+	const btn_stop_dv = document.querySelector('.btn_stop_dv')
+	const des_copy = document.querySelector('.des_copy')
+	const get_keyapi_title = document.querySelector('.get_keyapi_title')
+	const text_keyapi = document.querySelector('.text_keyapi')
+	
+	let data = <%- JSON.stringify(data) %>
+		console.log(data)
+	const keyapi =`${data._id}${data.deviceId}${data.userId}`
+	console.log(keyapi)
+	
+	
+	get_keyapi_title.onclick = () => {
+		text_keyapi.textContent = keyapi;
+		text_keyapi.style.display = 'inline';
+		get_keyapi_title.textContent = 'Key api:'
+	}
+	
+	text_keyapi.onclick = () => {
+		navigator.clipboard.writeText(keyapi);
+		des_copy.style.visibility = 'visible';
+		des_copy.textContent = 'copied';
+		des_copy.style.background = '#333';
+		des_copy.style.color = '#eee';
+	}
+	
+	if(data.status === 'off') {
+		btn_stop_dv.textContent = 'Trạng thái: Tắt';
+	} else {
+		btn_stop_dv.textContent = 'Trạng thái: bật';
+	}
+	
+	btn_stop_dv.onclick = () => {
+		if(data.status === 'off') {
+			btn_stop_dv.textContent = 'Trạng thái: bật'
+			value_btn_stop.value = 'on'
+		} else if(data.status === 'on') {
+			btn_stop_dv.textContent = 'Trạng thái: Tắt'
+			value_btn_stop.value = 'off'
+		}
+	}
+	
+</script>

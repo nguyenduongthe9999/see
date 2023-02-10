@@ -1,0 +1,358 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href='/css/iot/element.css'>
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	
+	<div class="element_container">
+		<div class="element_container_wrap">
+			<form method="post" action="/admin/iot/home/elements/setting/<%= data.groupId %>?eleid=<%= data.id %>">
+				<h1 class="element_title"><%= data.name %></h1>
+				<% if (data.type === "lamp") { %>
+					<div class="element_img"></div>
+				<% } else if (data.type === "fan") { %>
+					<div class="element_img">
+						<i class="fa-solid fa-fan fan_icon"></i>
+					</div>
+				<% } else if (data.type === "tv") { %>
+					<div class="element_img"></div>
+				<% } else if (data.type === "pump") { %>
+					<div class="element_img"></div>
+				<% } else if (data.type === "heater") { %>
+					<div class="element_img"></div>
+				<% } else if (data.type === "refrigerator") { %>
+					<div class="element_img"></div>
+				<% } else { %>
+            		<p class="noDevice">Chưa có trạm nào!<p>
+				<% } %>
+				<div class="element_setting">
+					<label class="switch">
+					  <input type="checkbox"  value="<%= data.status %>" name="stt">
+					  <span class="slider round"></span>
+					</label>	
+					<input name="value" id="progress" class="progress" type="range" value="<%= data.value %>" step="1" min="0" max="100">
+				</div>
+				
+				<input class="input_stt" type="hidden" value="<%= data.status %>" name="status" >
+				<div class="div_btn_element">
+					<button>Lưu</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+<%- include('../includes/footer.ejs') %>
+
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>
+<script>
+	const boxCkeck = document.querySelector('.switch input')
+	const element_img = document.querySelector('.element_img')
+	const input_stt = document.querySelector('.input_stt')
+	const fan_dv = document.querySelector('.element_img .fan_icon')
+	
+	const data = <%- JSON.stringify(data) %>
+	console.log(data)
+	
+	
+// 	 lamp
+if(data.type === "lamp") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		element_img.style.cssText = `
+			background-image:url('/images/bulb_off.jpg');
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		element_img.style.cssText = `
+			background-image:url('/images/bulb_on.jpg');
+		`;
+	}
+	element_img.onclick = () => {
+		console.log(boxCkeck.value)
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/bulb_on.jpg');
+			`;
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/bulb_off.jpg');
+			`;
+		}
+	}
+	boxCkeck.onfocus = () => {
+		console.log(boxCkeck.value)
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/bulb_on.jpg');
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/bulb_off.jpg');
+			`;
+		}
+	}
+}
+	
+// may bom nuoc
+if(data.type === "pump") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		element_img.style.cssText = `
+			background-image:url('/images/pump.svg');
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		element_img.style.cssText = `
+			background-image:url('/images/water-pump.svg');
+		`;
+	}
+	element_img.onclick = () => {
+		console.log(boxCkeck.value)
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/water-pump.svg');
+			`;
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/pump.svg');
+			`;
+		}
+	}
+	boxCkeck.onfocus = () => {
+		console.log(boxCkeck.value)
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/water-pump.svg');
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/pump.svg');
+			`;
+		}
+	}
+}
+	
+	
+// dieu hoa
+if(data.type === "heater") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		element_img.style.cssText = `
+			background-image:url('/images/gas-heater.svg');
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		element_img.style.cssText = `
+			background-image:url('/images/heater.svg');
+		`;
+	}
+	element_img.onclick = () => {
+		console.log(boxCkeck.value)
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/heater.svg');
+			`;
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/gas-heater.svg');
+			`;
+		}
+	}
+	boxCkeck.onfocus = () => {
+		console.log(boxCkeck.value)
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/heater.svg');
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/gas-heater.svg');
+			`;
+		}
+	}
+}
+	
+	
+// tu lanh
+if(data.type === "refrigerator") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		element_img.style.cssText = `
+			background-image:url('/images/refrigerator.svg');
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		element_img.style.cssText = `
+			background-image:url('/images/fridge.svg');
+		`;
+	}
+	element_img.onclick = () => {
+		console.log(boxCkeck.value)
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/fridge.svg');
+			`;
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/refrigerator.svg');
+			`;
+		}
+	}
+	boxCkeck.onfocus = () => {
+		console.log(boxCkeck.value)
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/fridge.svg');
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/refrigerator.svg');
+			`;
+		}
+	}
+}
+	
+	
+// tv
+if(data.type === "tv") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		element_img.style.cssText = `
+			background-image:url('/images/smart-tv.svg');
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		element_img.style.cssText = `
+			background-image:url('/images/tv-show.svg');
+		`;
+	}
+	element_img.onclick = () => {
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/tv-show.svg');
+			`;
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/smart-tv.svg');
+			`;
+		}
+	}
+	boxCkeck.onfocus = () => {
+		console.log(boxCkeck.value)
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			element_img.style.cssText = `
+				background-image:url('/images/tv-show.svg');
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			element_img.style.cssText = `
+				background-image:url('/images/smart-tv.svg');
+			`;
+		}
+	}
+}
+
+	
+// fan
+if(data.type === "fan") {
+	if(boxCkeck.value === "off") {
+		boxCkeck.checked = false;
+		fan_dv.style.cssText = `
+		`;
+	} else if(boxCkeck.value === "on") {
+		boxCkeck.checked = true;
+		fan_dv.style.cssText = `
+			animation: fanRotate linear 1s infinite;
+		`;
+	}
+	element_img.onclick = () => {
+		if(boxCkeck.value === "off") {
+			boxCkeck.checked = true;
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			fan_dv.style.cssText = `
+				animation: fanRotate linear 1s infinite;
+			`;
+			
+		} else if(boxCkeck.value === "on") {
+			boxCkeck.checked = false;
+			boxCkeck.value = "off";
+			input_stt.value = 'off';
+			fan_dv.style.cssText = `
+				animation: fanRotate linear 0s infinite;
+			`;
+		}
+	}
+	
+	boxCkeck.onfocus = () => {
+		if(!boxCkeck.checked) {
+			boxCkeck.value = 'on';
+			input_stt.value = 'on';
+			fan_dv.style.cssText = `
+				animation: fanRotate linear 1s infinite;
+			`;
+		} else {
+			boxCkeck.value = 'off';
+			input_stt.value = 'off';
+			fan_dv.style.cssText = `
+				animation: fanRotate linear 0s infinite;
+			`;
+		}
+	}
+	
+}
+
+	
+</script>

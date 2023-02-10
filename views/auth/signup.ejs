@@ -1,0 +1,46 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+ <link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
+<link rel="stylesheet" href="/css/auth/signup.css">
+</head>
+
+<body>
+	<div class="login_container">
+		<div class="login_box">
+			<div class="login_box_title">
+				<div class="login_box_title_icon">
+					<i class="fa-solid fa-user"></i>
+				</div>
+				<h1 class="login_box_title_text">Sign up</h1>
+			</div>
+			<form method="post" action="/signup">
+				<p class="error_mes"><%= errorMessage.msg %></p>
+				<div class="login_wrap_input">
+					<div class="login_input_item">
+						<i class="fa-solid fa-user"></i>
+						<input type="text" name="userName" placeholder="user name..." autocomplete="off" value="<%= errorMessage.param === 'userName' ? '' : oldInput.userName %>" >
+					</div>
+					<div class="login_input_item">
+						<i class="fa-solid fa-envelope"></i>
+						<input type="text" name="email" placeholder="Email..." autocomplete="off" value="<%= errorMessage.param === 'email' ? '' : oldInput.email %>" >
+					</div>
+					<div class="login_input_item">
+						<i class="fa-sharp fa-solid fa-lock"></i>
+						<input type="password" name="password" placeholder="password..." autocomplete="off" value="<%= errorMessage.param === 'password' ? '' : oldInput.password %>" >
+					</div>
+					<div class="login_input_item">
+						<i class="fa-sharp fa-solid fa-lock"></i>
+						<input type="password" name="repassword" placeholder="Confirm password..." autocomplete="off" value="<%= errorMessage.param === 'repassword' ? '' : oldInput.repassword %>" >
+					</div>
+					<a class="login_fogotpass" href="/login">Log in?</a>
+				</div>
+				
+				<button class="login_btn">Sign up</button>
+			</form>
+		</div>
+	</div>    
+
+
+<%- include('../includes/footer.ejs') %>
+
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

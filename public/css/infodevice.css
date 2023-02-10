@@ -1,0 +1,288 @@
+
+.container {
+	display:flex;
+	justify-content:space-between;
+	align-items:flex-start;
+	padding:24px;
+	margin-top:61px;
+	flex-wrap:wrap;
+}
+
+.container_info {
+	width:50%;
+	/* border:solid 1px #ccc; */
+	padding:12px;
+	background:#ccf2ff;
+	border-radius:12px;
+}
+
+.span_lo {
+	font-weight:bold;
+	color:#ff4d4d;
+}
+
+.span_location:nth-child(3) {
+	padding-left:12px;
+}
+
+.span_location {
+	margin-left:12px;
+}
+
+.container_info-title {
+	text-align:left;
+	color:#3c3c3c;
+	font-size:24px;
+	margin:12px 0 24px;
+	position:relative;
+}
+
+.value_id {
+	color:#ff4d4d;
+	font-weight:bold;
+}
+
+.container_info-one-wrap {
+	margin-bottom:44px;
+}
+
+.container_info-one-wrap > p {
+	font-size:15px;
+	color:#3c3c3c;
+	line-height:1.3;
+	margin-bottom:6px;
+	
+}
+
+.container_info-one-wrap .container_info-one-item .des_param {
+	overflow-wrap: break-word;
+}
+
+.span_name {
+	font-weight:bold;
+}
+
+.container_info-two-wrap {
+	display:flex;
+	justify-content:space-between;
+	flex-wrap:wrap;
+}
+
+.container_info-two-item {
+	width:48%;
+	margin-bottom:8px;
+	padding-bottom:4px;
+	border-bottom:solid 1px #ccc;
+}
+
+.container_info-two-item > p {
+	font-size:15px;
+	line-height:1.3;
+}
+
+.name_data {
+	font-weight:bold;
+}
+
+.btn_copy {
+	margin-left:24px;
+	padding:4px;
+	cursor:pointer;
+	font-size:12px;
+	color:#ff4d4d;
+	font-weight:bold;
+}
+
+.container_code {
+	width:50%;
+	background:#fff;
+	/* border:solid 1px #333; */
+	position:sticky;
+	top:24px;
+	
+}
+
+.code_listBtn {
+	padding:8px;
+	border-bottom:solid 1px #dddd;
+	border-left:solid 1px #dddd;
+	width:80%;
+	margin:auto;
+	border-bottom-left-radius:6px;
+	box-shadow:-2px 4px 6px 1px #8f8f8f;
+	
+}
+
+.container_info-one-item.box_formJs {
+	display:flex;
+	align-items:center;
+	justify-content:flex-start;
+	flex-wrap:wrap;
+	margin-top:16px;
+}
+
+.text_json {
+	display:block;
+	width:100%;
+	font-weight:bold;
+	/* background:#fff; */
+	padding:0 12px;
+	height:100%;
+	overflow-y:scroll;
+	overflow-x:scroll;
+	color:#ff4d4d;
+}
+
+.value_formjson {
+	display:inline-block;
+	width:50%;
+	height:200px;
+	margin-left:24px;
+	border:solid 1px #ff4f4d ;
+	box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.3);
+	border-radius:4px;
+}
+
+
+.btn_code {
+	padding:8px 12px;
+	font-size:12px;
+	color:#3c3c3c;
+	font-weight:bold;
+	outline:none;
+	border:none;
+	cursor:pointer;
+	background:#ffccee;
+	border-radius:8px;
+	margin-right:6px;
+	transition:all ease 0.3s;
+}
+
+.btn_code:hover {
+	background:#666666;
+	color:#e6e6e6;
+}
+
+.btn_code.active {
+	background:#666666;
+	color:#e6e6e6;
+}
+
+.box_code {
+	position:relative;
+	max-width:80%;
+	max-height:460px;
+	background:#dddd;
+	margin:12px auto;
+	overflow-y:scroll;
+	border-radius:6px;
+}
+
+.contai_code {
+	/* background:#333; */
+	padding:12px;
+	font-size:12px;
+}
+
+.btn_code_copy {
+	position:sticky;
+	top:0;
+	right:100%;
+	outline:none;
+	border:none;
+	padding:8px 12px;
+	border-bottom-left-radius:4px;
+	margin:0;
+	margin-left:100%;
+	transform:translatex(-100%);
+	transition:all ease 0.1s;
+	font-size:14px;
+}
+
+.btn_code_copy:hover {
+	background: #ff9999;
+	color:#ddd;
+}
+
+.container_info-three {
+	padding: 24px 0;
+	margin-bottom:40px;
+	border-bottom:solid 1px #ccc;
+	border-top:solid 1px #ccc;
+	
+}
+
+.container_info-title::before {
+	content: "";
+	position:absolute;
+	width:40px;
+	height:4px;
+	background:red;
+	border-radius:2px;
+	bottom:-6px;
+}
+
+.container_info-title::after {
+	content: "";
+	position:absolute;
+	width:40px;
+	height:4px;
+	background:yellowgreen;
+	border-radius:2px;
+	bottom:-6px;
+	left:44px;
+}
+
+
+
+.container_info-title3 {
+	margin:0 0 24px;
+	position:relative;
+}
+
+.container_info-three-item {
+	font-size:15px;
+	line-height:1.4;
+}
+
+.span_param_three {
+	font-weight:bold;
+}
+
+.container_info-three-item-redict {
+	font-weight:bold;
+}
+
+.container_info-three-item-redict:hover {
+	opacity:0.7;
+}
+
+.aaa {
+	width:100%;
+	height:1000px;
+}
+
+@media only screen and (max-width: 900px) {
+	.container_info {
+		width:100%;
+	}
+	.container {
+		padding:0;
+	}
+	.container_code {
+		width:100%;
+		padding:24px 0;
+	}
+	.code_listBtn {
+		width:100%;
+	}
+	.box_code {
+		max-width:100%;
+		margin-top:0;
+	}
+	.value_formjson {
+		width:80%;
+		margin-top:12px;
+		margin-bottom:12px;
+	}
+}

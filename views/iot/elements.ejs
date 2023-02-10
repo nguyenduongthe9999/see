@@ -1,0 +1,143 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href='/css/iot/elements.css'>
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="iot_container">
+		<div class="iot_wrap_group">
+			<h1 class="iot_group_title">Thiết bị</h1>
+				<% if (data.elements.length > 0) { %>
+			<div class="iot_list_group">
+					<% for (let dt of data.elements) { %>
+						<div class="iot_item_group">
+							<div class="top_item_iot">
+								<div class="top_item_iot_des">
+									<p class="item_iot_title"><%= dt.name %></p>
+									<psan class="group_status"></psan>
+								</div>
+								<div class="top_item_iot_setting">
+									<i class="fa-solid fa-ellipsis"></i>
+									<div class="setting_gr">
+										<li class="setting_gr_item">
+											<p class="setting_see">
+												<i class="fa-solid fa-note-sticky"></i>
+												Xem chi tiết
+											</p>
+										</li>
+										<li class="setting_gr_item">
+											<p class="setting_copy_link">
+												<i class="fa-solid fa-copy"></i>
+												Copy link
+											</p>
+										</li>
+										<li class="setting_gr_item">
+											<p class="setting_setting">
+												<i class="fa-solid fa-gear"></i>
+												Cài đặt
+											</p>
+										</li>
+										<li class="setting_gr_item setting_gr_item_dele">
+											<form method="post" action="/admin/iot/deleteEle/<%= data._id %>?eleid=<%= dt.id %>">
+												<button class="setting_btn_delete">
+													<i class="fa-solid fa-trash"></i>
+													Xóa
+												</button>
+											</form>
+										</li>
+										
+									</div>
+								</div>
+							</div>
+							<% if (dt.type === "lamp") { %>
+								<div class="center_item_iot" style="background-image:url('/images/light-bulb.svg');"></div>
+							<% } else if (dt.type === "fan") { %>
+								<div class="center_item_iot" style="background-image:url('/images/fan.svg');"></div>
+							<% } else if (dt.type === "tv") { %>
+								<div class="center_item_iot" style="background-image:url('/images/tv-show.svg');"></div>
+							<% } else if (dt.type === "pump") { %>
+								<div class="center_item_iot" style="background-image:url('/images/pump.svg');"></div>
+							<% } else if (dt.type === "heater") { %>
+								<div class="center_item_iot" style="background-image:url('/images/heater.svg');"></div>
+							<% } else if (dt.type === "refrigerator") { %>
+								<div class="center_item_iot" style="background-image:url('/images/refrigerator.svg');"></div>
+							<% } else { %>
+								<p class="noDevice">Chưa có trạm nào!<p>
+							<% } %>
+							
+							<div class="end_item_iot">
+								<a href="/admin/iot/home/elements/see/<%= data._id %>?eleid=<%= dt.id %>" class="btn_see_element">
+									<i class="fa-solid fa-eye"></i>
+									Xem
+								</a>
+							</div>
+						</div>
+				<% } %>
+					<% } else { %>
+            			<p class="nogr">Chưa có thiết bị nào!<p>
+        			<% } %>
+				
+				
+				
+				<div class="iot_item_group iot_create_group">
+					<div class="iot_create_group_box">
+						<i class="fa-solid fa-plus"></i>
+					</div>
+					<div class="conatiner_create_group">
+						<form method="post" action="/admin/iot/createElement/<%= data._id %>">
+							<div class="conatiner_create_group-wrap">
+								<div class="conatiner_create_group-item">
+									<label for="name" class="conatiner_create_group-item-des">Tên Thiết bị</label>
+									<input id="name" class="conatiner_create_group-item-input" name="name" placeholder="Tên cụm...">
+								</div>
+								<div class="conatiner_create_group-item">
+									<label for="des" class="conatiner_create_group-item-des">Mô tả</label>
+									<textarea id="des" name="des" placeholder="Mô tả..."></textarea>
+								</div>
+								<div class="conatiner_create_group-item">
+									<label for="type_dv" class="conatiner_create_group-item-des">Chọn loại</label>
+									<select name="type_dv" id="type_dv">
+									  <option value="lamp">Đèn</option>
+									  <option value="fan">Quạt</option>
+									  <option value="engine">động cơ quay</option>
+									  <option value="tv">Tv</option>
+									  <option value="refrigerator">Tủ lạnh</option>
+									  <option value="heater">Điều hòa</option>
+									  <option value="pump">Máy bơm nước</option>
+									</select>
+								</div>
+							</div>
+							<div class="box_btn">
+								<button class="btn_create_gr">Xác nhận</button>
+								<div class="btn_back">Hủy</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+<%- include('../includes/footer.ejs') %>
+
+
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>
+<script>
+	const btn_back = document.querySelector('.btn_back');
+	const iot_create_group_box = document.querySelector('.iot_create_group_box')
+	const conatiner_create_group = document.querySelector('.conatiner_create_group')
+	
+	iot_create_group_box.onclick = () => {
+		conatiner_create_group.style.display = 'flex';
+	}
+	
+	btn_back.onclick = () => {
+		conatiner_create_group.style.display = 'none';
+	}
+	
+	
+	
+</script>

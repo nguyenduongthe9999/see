@@ -1,0 +1,67 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href='/css/homeAnalysis.css'>
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="table_wrap table_wrap_1">
+			<table>
+			  <tr>
+				  <th>stt</th>
+				<th>Tên dữ liệu</th>
+				<th>Nhỏ nhất</th>
+				<th>Lớn nhất</th>
+				<th>Trung bình</th>
+				<th>Thời gian</th>
+			  </tr>
+				<% if (data.alldt.length > 0) { %>
+						<% for (let i=0 ; i < data.alldt.length ; i++) { %>
+						  <tr class="value_tb">
+							  <td class='stt'><%= i+1 %></td>
+							  <td class="name<%= i+1 %>"></td>
+							  <td class="min<%= i+1 %>"></td>
+							  <td class="max<%= i+1 %>"></td>
+							  <td class="ana_tb<%= i+1 %>"></td>
+							  <td class="time<%= i+1 %>"><%= data.alltime[0] %>--<%= data.alltime[data.alltime.length-1] %></td>
+						</tr>
+				<% } %>
+					<% } else { %>
+						<tr class="value_tb">
+							  <td class='stt'>1</td>
+							<td><a>Chưa có trạm nào!</a></td>
+							  <td><a></a></td>
+							  <td><a></a></td>
+							  <td><a></a></td>
+							  <td><a class='tt'></a></td>
+						  </tr>
+        			<% } %>
+			  
+			</table>
+		</div>
+
+<%- include('../includes/footer.ejs') %>
+
+<script>
+	let data = <%- JSON.stringify(data) %>
+	for(let i = 0 ; i < data.alldt.length ; i++) {
+		document.querySelector(`.name${i+1}`).textContent = data.listn[i];
+		let initSum = 0;
+		const indexMin = data.alldt[i].findIndex(item => {
+			return Math.min(...data.alldt[i]).toString() === item.toString()
+		})
+		const indexMax = data.alldt[i].findIndex(item => {
+			return Math.max(...data.alldt[i]).toString() === item.toString()
+		})
+		document.querySelector(`.min${i+1}`).textContent = Math.min(...data.alldt[i]).toString() + '--' + data.alltime[indexMin]
+		document.querySelector(`.max${i+1}`).textContent = Math.max(...data.alldt[i]).toString()  + '--' + data.alltime[indexMax]
+		document.querySelector(`.ana_tb${i+1}`).textContent = (data.alldt[i].reduce((sum,currentValue) => sum+Number(currentValue),initSum)/data.alldt[i].length).toFixed(3) ;
+		document.querySelector(`.min${i+1}`).style.padding = '8px';
+		document.querySelector(`.name${i+1}`).style.padding = '8px';
+		document.querySelector(`.max${i+1}`).style.padding = '8px';
+		document.querySelector(`.ana_tb${i+1}`).style.padding = '8px';
+		document.querySelector(`.time${i+1}`).style.padding = '8px';
+	}
+</script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

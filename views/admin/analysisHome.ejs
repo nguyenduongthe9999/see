@@ -1,0 +1,57 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+<link rel="stylesheet" href='/css/homeAnalysis.css'>
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+	<div class="container_ana">
+		<form action="" method="post">
+			<div class="search_wrap">
+				<input type="text" placeholder="Nhập tên trạm..." name="searchNameDv">
+				<button>
+					<i class="fa-solid fa-magnifying-glass"></i>
+				</button>
+			</div>
+		</form>
+		<div class="table_wrap table_wrap_home">
+			<table>
+			  <tr>
+				  <th>stt</th>
+				<th>Tên</th>
+				<th>ID</th>
+				<th>Số trường </th>
+				<th>user</th>
+				<th>Trạng thái</th>
+			  </tr>
+				<% if (data.length > 0) { %>
+						<% for (let i=0 ; i < data.length ; i++) { %>
+						  <tr class="value_tb">
+							  <td class='stt'><%= i+1 %></td>
+							<td><a href="/admin/analysis/<%= data[i].deviceId %>"><%= data[i].nameDevice %></a></td>
+							  <td><a href="/admin/analysis/<%= data[i].deviceId %>"><%= data[i].deviceId %></a></td>
+							  <td><a href="/admin/analysis/<%= data[i].deviceId %>"><%= data[i].numberFeil %></a></td>
+							  <td><a href="/admin/analysis/<%= data[i].deviceId %>"><%= data[i].userName %></a></td>
+							  <td><a class='tt' href="/admin/analysis/<%= data[i].deviceId %>">Hoạt động</a></td>
+						  </tr>
+				<% } %>
+					<% } else { %>
+						<tr class="value_tb">
+							  <td class='stt'>1</td>
+							<td><a>Chưa có trạm nào!</a></td>
+							  <td><a></a></td>
+							  <td><a></a></td>
+							  <td><a></a></td>
+							  <td><a class='tt'></a></td>
+						  </tr>
+        			<% } %>
+			  
+			</table>
+		</div>
+	</div>
+
+<%- include('../includes/footer.ejs') %>
+
+<script src="/js/googleMap/map.js"></script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>

@@ -1,0 +1,70 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/font/fontawesome-free-6.2.1-web/css/all.min.css">
+ <link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
+
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <main class="container">
+        <div class="container_page1">
+            <div class="container_page1_wrap">
+                <div class="container_page1_wrap-left">
+                    <div class="body_wrap_container1-left">
+                        <h1 class="container_page1_wrap-left-title">Trình tạo đồ thị</h1>
+                        <p class="container_page1_wrap-left-param">Theo dõi biểu đồ dữ liệu thực tế chỉ trong vài phút</p>
+                        <a href="/admin/station" class="container_page1_wrap-left-link">follow data now</a>
+                    </div>
+                </div>
+                <div class="container_page1_wrap-right">
+                    <img src="/images/avadv1.jpg" alt="anh may tinh" class="container_page1_wrap-left-image">
+                </div>
+            </div>
+        </div>
+        <div class="container_page2">
+            <div class="container_page2-wrap">
+                <h3 class="container_page2-title">Tạo trực quan hóa dữ liệu đẹp mắt với trình theo dõi dữ liệu trực tiếp</h3>
+                <p class="container_page2-param">Không giống như các website tạo biểu đồ trực tuyến khác, See không phức tạp hoặc tốn thời gian. Không có đường cong học tập – bạn sẽ có được một biểu đồ hoặc sơ đồ đẹp mắt trong vài phút, biến dữ liệu thô thành thứ gì đó vừa trực quan vừa dễ hiểu.</p>
+                <ul class="container_page2-list">
+                    <li class="container_page2-item">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <p class="container_page2-item-des">Nhiều loại biểu đồ chuyên nghiệp để lựa chọn</p>
+                    </li>
+                    <li class="container_page2-item">
+                        <i class="fa-sharp fa-solid fa-table"></i>
+                        <p class="container_page2-item-des">Các mẫu được thiết kế chuyên nghiệp để theo dõi nhanh quy trình làm việc của bạn</p>
+                    </li>
+                    <li class="container_page2-item">
+                        <i class="fa-sharp fa-solid fa-shapes"></i>
+                        <p class="container_page2-item-des">Dễ dàng trực quan hóa dữ liệu – không cần học phần mềm phức tạp</p>
+                    </li>
+                    <li class="container_page2-item">
+                        <i class="fa-solid fa-download"></i>
+                        <p class="container_page2-item-des">Xuất bản, chia sẻ hoặc tải xuống đồ thị có độ phân giải cao của bạn</p>
+                    </li>
+                    <li class="container_page2-item">
+                        <i class="fa-sharp fa-solid fa-chart-simple"></i>
+                        <p class="container_page2-item-des">Nhúng biểu đồ của bạn vào bản trình bày, báo cáo, v.v. một cách dễ dàng</p>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+        <%- include('../includes/map.ejs') %>
+        <div class="container_page4">
+            <div class="container_page4-wrap">
+                <h1 class="container_page4-title">Đưa dữ liệu của bạn vào cuộc sống</h1>
+                <a href="/admin/createDevice" class="container_page4-link">Tạo biểu đồ của tôi ngay bây giờ</a>
+            </div>
+        </div>
+    </main>
+
+
+<%- include('../includes/footer.ejs') %>
+
+<script src="https://js.arcgis.com/4.19/" defer></script>
+<script src="/js/googleMap/map.js" defer></script>
+<script src="/js/hanldeScroll/hanldeScrollHeader.js"></script>
+<script>
+  
+</script>
