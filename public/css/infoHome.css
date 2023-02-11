@@ -154,6 +154,14 @@
 	border-bottom-left-radius:10px;
 }
 
+.infoHome_wrap_item-img1,
+.infoHome_wrap_item-img2 {
+	width:50%;
+	height:200px;
+	border-top-left-radius:10px;
+	border-bottom-left-radius:10px;
+}
+
 .infoHome_wrap_item-des {
 	background:#fff;
 	flex:1;
