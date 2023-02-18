@@ -24,7 +24,7 @@ dataSchema.methods.updateData = function(data) {
 		return data[item] !== null;
 	})
 	
-	if(this.value[listdt[0]].length >= 100000) {
+	if(this.value[listdt[0]].length >= 10000000) {
 		for(dt of listdt) {
 			let newdata = this.value[dt];
 			newdata.push(data[dt])
