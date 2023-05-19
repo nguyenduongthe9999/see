@@ -205,7 +205,7 @@ exports.postReset = (req,res,next) => {
 					subject:'Password reset',
 					html:`
 						<p>You requested a passowrd reset</p>
-						<p>Click this <a href="https://seed-data.run.goorm.app/reset/${token}">link</a> to set a new password.</p>
+						<p>Click this <a href="http://earth.edu.vn/reset/${token}">link</a> to set a new password.</p>
 
 					`
 				},function(err,res) {
