@@ -312,7 +312,103 @@ contai_code.innerText = code8266;
 			btnS32.classList.remove('active');
 			btnAr.classList.remove('active');
 			btnE32.classList.add('active');
-			contai_code.innerText = 'esp32 code'
+			contai_code.innerText =
+			 `
+#include <WiFi.h>
+#include <Arduino_JSON.h>
+#include <HTTPClient.h>
+
+const char* ssid = "name_wifi";
+const char* password = "password";
+String stt = "off";
+String serverName = "http://earth.edu.vn/admin/deployDt";
+String keyapi = "http://earth.edu.vn/admin/api/deviceData/your_keyapi";
+unsigned long lastTime = 0;
+unsigned long timerDelay = 1000;
+unsigned long slepTime;
+String json_array;
+WiFiClient client;
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  Serial.println("Connecting");
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to WiFi network with IP Address: ");
+  Serial.println(WiFi.localIP());
+}
+
+String GET_Request(const char* keyapi) {
+  HTTPClient http;    
+  http.begin(client,keyapi);
+  int httpResponseCode = http.GET(); 
+  String payload = "{}"; 
+  if (httpResponseCode>0) {
+    Serial.print("HTTP Response code get: ");
+    Serial.println(httpResponseCode);
+    payload = http.getString();
+  }
+  else {
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
+  http.end();
+  return payload;
+}
+
+void loop() {
+  if ((millis() - lastTime) > timerDelay) {
+    //Check WiFi connection status
+    if(WiFi.status()== WL_CONNECTED){
+      HTTPClient http;
+      //get data
+      json_array = GET_Request(keyapi.c_str());
+      JSONVar my_obj = JSON.parse(json_array);
+      if (JSON.typeof(my_obj) == "undefined") {
+        Serial.println("Parsing input failed!");
+        return;
+      }
+      Serial.println(my_obj);
+      if (my_obj.hasOwnProperty("slepTime")) {
+        Serial.print("my_obj[\\"slepTime\\"] = ");
+        Serial.println((const char*) my_obj["slepTime"]);
+        slepTime =  atoi((const char*) my_obj["slepTime"]);       
+      }
+      if (my_obj.hasOwnProperty("status")) {
+        Serial.print("my_obj[\\"status\\"] = ");
+        Serial.println((const char*) my_obj["status"]);
+        stt = String((const char*) my_obj["status"]);
+      }      
+      //post data
+      http.begin(client, serverName);
+      http.addHeader("Content-Type", "application/json");
+      String postData = ${textTransform}
+      if(stt == "on") {
+        int httpResponseCode = http.POST(postData);
+        Serial.println("Trang thai: Dang bat");
+        Serial.print("HTTP Response code post: ");
+        Serial.println(httpResponseCode);
+      } else {
+        Serial.println("Trang thai: Dang tat");
+      } 
+      Serial.println("---------------");
+      Serial.println();
+        
+      // Free resources
+      http.end();
+    }
+    else {
+      Serial.println("WiFi Disconnected");
+    }
+    lastTime = millis();
+    // check slep time
+    timerDelay = slepTime;
+  }
+}
+`	
 		}
 		activeBtn = btnE32.innerText;
 	}
