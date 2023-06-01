@@ -145,15 +145,16 @@ let chartDevice = new Chart(ctx, {
 	  datasets: [{
 		label: `# ${title}`,
 		data: filtercharts().value,
-		borderWidth: 1,
-	   pointRadius: 0,
+		borderWidth: 0,
+	   pointRadius: 3,
+	   pointBackgroundColor:'#888',
 		fill: {
 		target: 'origin',
-		above: 'rgb(153, 153, 0,0.2)',   // Area will be red above the origin
-		below: 'rgb(0, 0, 255,0.2)'    // And blue below the origin
+		above: 'rgb(199, 199, 0,0.1)',   // Area will be red above the origin
+		below: 'rgb(0, 0, 199,0.1)'    // And blue below the origin
 	  },
 		borderColor: 'rgb(75, 192, 192)',
-		tension: 0.2
+		tension: 0
 	  }]
 	},
 	options: {
@@ -161,7 +162,7 @@ let chartDevice = new Chart(ctx, {
 		  x: {
 			max: Number(numberPoint),
 			grid: {
-				lineWidth:1,
+				lineWidth:0.3,
 				// tickLength:200,
 				tickWidth:100,
 			}
