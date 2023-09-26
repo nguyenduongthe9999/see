@@ -181,7 +181,7 @@ exports.postReset = (req,res,next) => {
 		}
 		
 		const email = req.body.email
-		const token = buffer.toString('hex')
+		const token = buffer.alloc.toString('hex')
 		
 		User.findOne({email:email})
 		.then(user => {

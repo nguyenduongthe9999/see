@@ -1,0 +1,10 @@
+express-validator: requires to express-validator/check are deprecated.You should just use require("express-validator") instead.
+(node:9952) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Application has thrown an uncaught exception and is terminated:
+Error: listen EACCES: permission denied 0.0.0.0:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1355:21)
+    at listenInCluster (node:net:1420:12)
+    at Server.listen (node:net:1508:7)
+    at D:\nodeJs\see\app.js:87:12
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)

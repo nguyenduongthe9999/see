@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
 mongoose.connect(MONGODB_URI)
 .then(result => {
     console.log('connect successfull!')
-    server.listen(3000)
+    server.listen(process.env.PORT || 5000)
 }).catch(err => {
     console.log(err)
 })

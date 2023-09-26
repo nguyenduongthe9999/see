@@ -1,0 +1,3 @@
+express-validator: requires to express-validator/check are deprecated.You should just use require("express-validator") instead.
+(node:12528) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
